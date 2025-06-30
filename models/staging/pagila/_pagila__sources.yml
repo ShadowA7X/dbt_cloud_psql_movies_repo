@@ -1,0 +1,31 @@
+version: 2
+sources:
+- name: pagila
+  database: pagila
+  schema: public
+  description: "This is our first database source coming from Postgres Aiven"
+  tables:
+  - name: address
+    description: "Contains customer and store address information including phone and postal codes. Each address is associated with a city."
+    columns:
+    - name: address_id
+      description: "Primary key of the address table."
+      tests:
+      - unique
+      - not_null
+    - name: address
+      description: "First line of the street address."
+    - name: address2
+      description: "Second line of the street address (optional)."
+    - name: district
+      description: "District or region of the address."
+    - name: city_id
+      description: "Foreign key to the city table that links this address to a city."
+      tests:
+      - not_null
+    - name: postal_code
+      description: "Postal code or ZIP code."
+    - name: phone
+      description: "Contact phone number for the address."
+    - name: last_update
+      description: "Timestamp of the last update to the address record."

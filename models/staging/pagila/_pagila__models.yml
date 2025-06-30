@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_pagila__address # The name of model linked to this description.
+														  # It needs to be the same name of the file.
+    description: "Cleaned version of the raw address data from Pagila."
+    columns:
+      - name: address_id
+        description: "Primary key of the address table."
+        tests:
+          - unique
+          - not_null
+
+      - name: address
+        description: "Street address line 1."
+
+      - name: address2
+        description: "Street address line 2 (optional)."
+
+      - name: city_id
+        description: "FK to city table."
+        tests:
+          - not_null
+
+      - name: district
+        description: "Region/district name."
+
+      - name: postal_code
+        description: "Postal or ZIP code."
+
+      - name: phone
+        description: "Contact phone number."
+
+      - name: last_update
+        description: "Timestamp of last update to the record."
