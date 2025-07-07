@@ -1,8 +1,7 @@
 version: 2
 
 models:
-  - name: stg_pagila__address # The name of model linked to this description.
-														  # It needs to be the same name of the file.
+  - name: stg_pagila__address
     description: "Cleaned version of the raw address data from Pagila."
     columns:
       - name: address_id
