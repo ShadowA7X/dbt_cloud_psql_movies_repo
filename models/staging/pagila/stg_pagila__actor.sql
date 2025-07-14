@@ -1,9 +1,7 @@
-{% set source_table = source('pagila', 'actor') %}
-
 with source as (
 
     select * 
-    from { source_table }
+    from {{ source('pagila', 'actor') }}
 
 ),
 
