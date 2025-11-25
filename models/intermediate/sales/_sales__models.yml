@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: int_payments_enriched
+    description: >
+      Intermediate model at the grain of (payment_id, category_id).
+      This table enriches each payment with rental, inventory, store, film, and
+      category context to support analyses like revenue by store, film, and category.
+      Because a film can belong to multiple categories in Pagila, the same payment
+      may appear more than once with different categories.
+
+    tests:
+      # Ensures no duplicate rows at the defined grain
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["payment_id", "category_id"]
+
+      # Optional lightweight guardrail against negative revenues
+      - dbt_utils.expression_is_true:
+          name: int_payments_enriched__amount_non_negative
+          expression: "amount >= 0"
+
+    columns:
+      - name: payment_id
+        description: "Unique identifier of the payment (primary ID from source)."
+        tests:
+          - not_null
+
+      - name: payment_date
+        description: "Timestamp the payment was made."
+        tests:
+          - not_null
+
+      - name: amount
+        description: "Revenue amount recorded in the payment (store currency)."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer who made the payment."
+        tests:
+          - relationships:
+              to: ref('stg_pagila__customer')
+              field: customer_id
+
+      - name: staff_id
+        description: "Staff member who processed the payment."
+        tests:
+          - relationships:
+              to: ref('stg_pagila__staff')
+              field: staff_id
+
+      - name: rental_id
+        description: "Rental transaction tied to the payment."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_pagila__rental')
+              field: rental_id
+
+      - name: inventory_id
+        description: "Inventory item that was rented."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_pagila__inventory')
+              field: inventory_id
+
+      - name: store_id
+        description: "Store where the inventory item belongs (transaction store)."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_pagila__store')
+              field: store_id
+
+      - name: film_id
+        description: "Film that was rented."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_pagila__film')
+              field: film_id
+
+      - name: film_title
+        description: "Human-readable movie title from the film dimension."
+
+      - name: category_id
+        description: "Film category ID (nullable if film has no category)."
+        tests:
+          - relationships:
+              to: ref('stg_pagila__category')
+              field: category_id
+
+      - name: category_name
+        description: "Film category name (nullable if film has no category)."
+
