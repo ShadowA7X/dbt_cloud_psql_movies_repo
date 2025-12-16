@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: dim_store
+    description: >
+      Store dimension. One row per store. Contains basic store metadata
+      (currently store_id and manager_staff_id).
+    columns:
+      - name: store_id
+        description: "Unique identifier for the store."
+        tests:
+          - not_null
+          - unique
+
+      - name: manager_staff_id
+        description: "Staff member who manages the store."
+
+  - name: dim_film
+    description: >
+      Film dimension. One row per film, with descriptive attributes used for analysis
+      (title, rating, release year, length, language).
+    columns:
+      - name: film_id
+        description: "Unique identifier for the film."
+        tests:
+          - not_null
+          - unique
+
+      - name: film_title
+        description: "Human-readable film title."
+
+      - name: release_year
+        description: "Year the film was released."
+
+      - name: rating
+        description: "Film rating (e.g., PG, PG-13, R)."
+
+      - name: length
+        description: "Film duration in minutes."
+
+      - name: language_id
+        description: "Language identifier for the film."
+
+  - name: dim_category
+    description: >
+      Category dimension. One row per film category.
+    columns:
+      - name: category_id
+        description: "Unique identifier for the category."
+        tests:
+          - not_null
+          - unique
+
+      - name: category_name
+        description: "Name of the film category (e.g., Action, Comedy, Family)."
+        tests:
+          - not_null

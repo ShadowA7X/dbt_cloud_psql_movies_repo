@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: agg_revenue_by_store_category_film_daily
+    description: >
+      Aggregated sales mart for Requirement 1.
+      One row per (payment_day, store_id, film_id, category_id), with revenue summed.
+      This table is optimized for fast, stable BI dashboards.
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["payment_day", "store_id", "film_id", "category_id"]
+
+      - dbt_utils.expression_is_true:
+          name: agg_revenue_by_store_category_film_daily__revenue_non_negative
+          expression: "revenue_amount >= 0"
+
+    columns:
+      - name: payment_day
+        description: "Day of the payment (date grain)."
+        tests:
+          - not_null
+
+      - name: store_id
+        description: "Store identifier."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_store')
+              field: store_id
+
+      - name: film_id
+        description: "Film identifier."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_film')
+              field: film_id
+
+      - name: category_id
+        description: "Category identifier (nullable if film has no category)."
+        tests:
+          - relationships:
+              to: ref('dim_category')
+              field: category_id
+
+      - name: film_title
+        description: "Film title included for BI convenience."
+
+      - name: category_name
+        description: "Category name included for BI convenience."
+
+      - name: revenue_amount
+        description: "Total revenue for the (day, store, film, category) combination."
+        tests:
+          - not_null
