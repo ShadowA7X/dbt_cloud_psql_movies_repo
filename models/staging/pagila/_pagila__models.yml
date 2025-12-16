@@ -1,35 +1,275 @@
 version: 2
 
 models:
-  - name: stg_pagila__address # The name of model linked to this description.
-														  # It needs to be the same name of the file.
-    description: "Cleaned version of the raw address data from Pagila."
+  - name: stg_pagila__actor
+    description: "Cleaned version of the actor source table."
     columns:
-      - name: address_id
-        description: "Primary key of the address table."
+      - name: actor_id
+        description: "Primary key for actor."
         tests:
           - unique
           - not_null
+      - name: first_name
+        description: "Actor's first name."
+      - name: last_name
+        description: "Actor's last name."
+      - name: last_update
+        description: "Last update timestamp."
 
-      - name: address
-        description: "Street address line 1."
-
-      - name: address2
-        description: "Street address line 2 (optional)."
-
-      - name: city_id
-        description: "FK to city table."
+  - name: stg_pagila__address
+    description: "Cleaned version of the address source table."
+    columns:
+      - name: address_id
+        description: "Primary key for address."
         tests:
+          - unique
           - not_null
-
+      - name: address
+        description: "First line of address."
+      - name: address2
+        description: "Second address line (optional)."
       - name: district
-        description: "Region/district name."
-
+        description: "District or region."
+      - name: city_id
+        description: "Foreign key to city."
       - name: postal_code
         description: "Postal or ZIP code."
-
       - name: phone
-        description: "Contact phone number."
-
+        description: "Phone number."
       - name: last_update
-        description: "Timestamp of last update to the record."
+        description: "Last update timestamp."
+
+  - name: stg_pagila__category
+    description: "Cleaned version of the category source table."
+    columns:
+      - name: category_id
+        description: "Primary key for category."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Category name."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__city
+    description: "Cleaned version of the city source table."
+    columns:
+      - name: city_id
+        description: "Primary key for city."
+        tests:
+          - unique
+          - not_null
+      - name: city
+        description: "City name."
+      - name: country_id
+        description: "Foreign key to country."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__country
+    description: "Cleaned version of the country source table."
+    columns:
+      - name: country_id
+        description: "Primary key for country."
+        tests:
+          - unique
+          - not_null
+      - name: country
+        description: "Country name."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__customer
+    description: "Cleaned version of the customer source table."
+    columns:
+      - name: customer_id
+        description: "Primary key for customer."
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        description: "Store ID."
+      - name: first_name
+        description: "Customer's first name."
+      - name: last_name
+        description: "Customer's last name."
+      - name: email
+        description: "Customer email."
+      - name: address_id
+        description: "Foreign key to address."
+      - name: activebool
+        description: "Customer active status (boolean)."
+      - name: create_date
+        description: "Customer record creation date."
+      - name: last_update
+        description: "Last update timestamp."
+      - name: active
+        description: "Customer active status (integer)."
+
+  - name: stg_pagila__film
+    description: "Cleaned version of the film source table."
+    columns:
+      - name: film_id
+        description: "Primary key for film."
+        tests:
+          - unique
+          - not_null
+      - name: title
+        description: "Film title."
+      - name: description
+        description: "Film description."
+      - name: release_year
+        description: "Year of release."
+      - name: language_id
+        description: "Language ID."
+      - name: original_language_id
+        description: "Original language (nullable)."
+      - name: rental_duration
+        description: "Number of rental days."
+      - name: rental_rate
+        description: "Rental price."
+      - name: length
+        description: "Film duration (minutes)."
+      - name: replacement_cost
+        description: "Cost to replace the film."
+      - name: rating
+        description: "MPAA rating."
+      - name: last_update
+        description: "Last update timestamp."
+      - name: special_features
+        description: "Extra features of the film."
+      - name: fulltext
+        description: "Fulltext search vector."
+
+  - name: stg_pagila__film_actor
+    description: "Cleaned version of the film_actor source table."
+    columns:
+      - name: actor_id
+        description: "Foreign key to actor."
+      - name: film_id
+        description: "Foreign key to film."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__film_category
+    description: "Cleaned version of the film_category source table."
+    columns:
+      - name: film_id
+        description: "Foreign key to film."
+      - name: category_id
+        description: "Foreign key to category."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__inventory
+    description: "Cleaned version of the inventory source table."
+    columns:
+      - name: inventory_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: film_id
+        description: "Film in inventory."
+      - name: store_id
+        description: "Store where inventory is held."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__language
+    description: "Cleaned version of the language source table."
+    columns:
+      - name: language_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Language name."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__payment
+    description: "Cleaned version of the payment source table."
+    columns:
+      - name: payment_id
+        description: "Primary key for payment."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer making payment."
+      - name: staff_id
+        description: "Staff processing payment."
+      - name: rental_id
+        description: "Associated rental ID."
+      - name: amount
+        description: "Amount paid."
+      - name: payment_date
+        description: "Payment timestamp."
+
+  - name: stg_pagila__rental
+    description: "Cleaned version of the rental source table."
+    columns:
+      - name: rental_id
+        description: "Primary key for rental."
+        tests:
+          - unique
+          - not_null
+      - name: rental_date
+        description: "Timestamp of rental."
+      - name: inventory_id
+        description: "Inventory item rented."
+      - name: customer_id
+        description: "Customer who rented."
+      - name: return_date
+        description: "Timestamp of return."
+      - name: staff_id
+        description: "Staff handling the rental."
+      - name: last_update
+        description: "Last update timestamp."
+
+  - name: stg_pagila__staff
+    description: "Cleaned version of the staff source table."
+    columns:
+      - name: staff_id
+        description: "Primary key for staff."
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "First name."
+      - name: last_name
+        description: "Last name."
+      - name: address_id
+        description: "Staff address."
+      - name: email
+        description: "Email address."
+      - name: store_id
+        description: "Store assignment."
+      - name: active
+        description: "Active flag."
+      - name: username
+        description: "Username."
+      - name: password
+        description: "Password."
+      - name: last_update
+        description: "Last update timestamp."
+      - name: picture
+        description: "Binary photo data."
+
+  - name: stg_pagila__store
+    description: "Cleaned version of the store source table."
+    columns:
+      - name: store_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: manager_staff_id
+        description: "Manager staff ID."
+      - name: address_id
+        description: "Store location address."
+      - name: last_update
+        description: "Last update timestamp."

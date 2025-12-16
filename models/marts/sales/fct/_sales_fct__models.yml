@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: fct_sales_payments
+    description: >
+      Fact table for Sales at the grain of (payment_id, category_id).
+      Built from int_payments_enriched. Each row represents a single payment
+      enriched with store, film, and category context.
+      This table is the base for sales analytics and downstream aggregations.
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: ["payment_id", "category_id"]
+
+      - dbt_utils.expression_is_true:
+          name: fct_sales_payments__revenue_non_negative
+          expression: "revenue_amount >= 0"
+
+    columns:
+      - name: payment_id
+        description: "Unique identifier of the payment."
+        tests:
+          - not_null
+
+      - name: store_id
+        description: "Store where the transaction happened."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_store')
+              field: store_id
+
+      - name: category_id
+        description: "Film category associated with this payment (nullable if film has no category)."
+        tests:
+          - relationships:
+              to: ref('dim_category')
+              field: category_id
+
+      - name: film_id
+        description: "Film that was rented."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_film')
+              field: film_id
+
+      - name: payment_date
+        description: "Timestamp when the payment was made."
+        tests:
+          - not_null
+
+      - name: payment_day
+        description: "Day bucket derived from payment_date for daily analysis."
+        tests:
+          - not_null
+
+      - name: film_title
+        description: "Human-readable film title carried in the fact table for BI convenience."
+
+      - name: category_name
+        description: "Human-readable category name carried in the fact table for BI convenience."
+
+      - name: revenue_amount
+        description: "Revenue amount for the payment (summable metric)."
+        tests:
+          - not_null
