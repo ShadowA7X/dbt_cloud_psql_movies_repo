@@ -1,0 +1,24 @@
+version: 2
+
+semantic_models:
+  - name: films
+    model: ref('dim_film')
+    description: "Film dimension used to slice sales metrics (e.g., revenue by film title or rating)."
+
+    entities:
+      - name: film
+        type: primary
+        expr: film_id
+
+    dimensions:
+      - name: film_title
+        type: categorical
+        description: "Film title."
+
+      - name: rating
+        type: categorical
+        description: "Film rating (e.g., G, PG, PG-13, R)."
+
+      - name: release_year
+        type: categorical
+        description: "Film release year."

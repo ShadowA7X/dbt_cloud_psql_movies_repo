@@ -1,0 +1,16 @@
+version: 2
+
+semantic_models:
+  - name: categories
+    model: ref('dim_category')
+    description: "Category dimension used to slice sales metrics (e.g., revenue by category)."
+
+    entities:
+      - name: category
+        type: primary
+        expr: category_id
+
+    dimensions:
+      - name: category_name
+        type: categorical
+        description: "Human-friendly category name (e.g., Action, Comedy)."

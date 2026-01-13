@@ -1,0 +1,16 @@
+version: 2
+
+semantic_models:
+  - name: stores
+    model: ref('dim_store')
+    description: "Store dimension. Currently includes store_id and the manager_staff_id."
+
+    entities:
+      - name: store
+        type: primary
+        expr: store_id
+
+    dimensions:
+      - name: manager_staff_id
+        type: categorical
+        description: "Staff ID of the store manager."
