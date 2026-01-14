@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_payments_enriched
+  - name: int_payments_enriched_with_store_film_category
     description: >
       Intermediate model at the grain of (payment_id, category_id).
       This table enriches each payment with rental, inventory, store, film, and
